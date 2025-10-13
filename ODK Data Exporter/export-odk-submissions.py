@@ -3,6 +3,7 @@ import os
 import configparser
 from pathlib import Path
 from tqdm import tqdm
+from datetime import datetime, time
 
 class ODKSubmissionDownloader:
     def __init__(self, config_path='config.ini'):
@@ -64,6 +65,7 @@ class ODKSubmissionDownloader:
         """Download submissions for a single form"""
         format = self.config['settings']['preferred_format']
         download_url = f"{self.config['odk']['server_url']}/v1/projects/{project_id}/forms/{form_id}/submissions.{format}"
+        date_stamp = datetime.now().strftime("%Y%m%d")
 
         
         for attempt in range(int(self.config['settings']['max_retries'])):
@@ -81,7 +83,7 @@ class ODKSubmissionDownloader:
 
                 # File name
                 safe_form_name = self._sanitize(form_name)
-                filename = f"{safe_form_name}_submissions.{format}"
+                filename = f"{safe_form_name}_{date_stamp}.{format}"
                 filepath = os.path.join(output_dir, filename)
                 
                 with open(filepath, "wb") as f:
