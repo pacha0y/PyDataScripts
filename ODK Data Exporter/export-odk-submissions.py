@@ -69,6 +69,7 @@ class ODKSubmissionDownloader:
         for attempt in range(int(self.config['settings']['max_retries'])):
             try:
                 response = self.session.get(
+                    download_url,
                     stream=True,
                     timeout=int(self.config['settings']['timeout'])
                 )
