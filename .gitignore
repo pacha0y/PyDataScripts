@@ -1,0 +1,71 @@
+# --- Environment and Configuration Files ---
+.env
+.env.*
+*.ini
+*.config
+*.cfg
+*.properties
+*.secret
+*.credentials
+*.key
+*.pem
+*.cert
+
+# --- OS Generated Files ---
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# --- IDE / Editor Specific Files ---
+# VSCode
+.vscode/
+# JetBrains / IntelliJ / PhpStorm / WebStorm
+.idea/
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# --- Dependency directories ---
+node_modules/
+vendor/
+__pycache__/
+*.pyc
+*.pyo
+
+# --- Build and Log Files ---
+dist/
+build/
+*.log
+*.out
+*.tmp
+*.pid
+
+# --- Backup / Temp Files ---
+*.bak
+*.swp
+*.swo
+*.orig
+*.old
+~$*
+
+# --- Docker ---
+docker-compose.override.yml
+*.env.local
+
+# --- Database or Data Files ---
+*.db
+*.sqlite
+*.sqlite3
+*.csv
+*.tsv
+*.jsonl
+
+# --- Miscellaneous ---
+*.lock
