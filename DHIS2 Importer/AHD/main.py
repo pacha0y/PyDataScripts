@@ -1,3 +1,4 @@
+from datetime import datetime
 import os
 import pandas as pd # type: ignore
 from io import BytesIO
@@ -32,6 +33,22 @@ def load_excel_file():
     .str.strip()
     .str.replace(r"\s+", "_", regex=True)
 )
+    print(f"✓ Loaded {len(df)} rows")
+    return df
+
+def load_csv_file():
+    config = configparser.ConfigParser()
+    config.read("config.ini")
+
+    local_file = config["paths"]["csv_path"]
+    print(f"→ Loading local CSV file: {local_file}")
+
+    df = pd.read_csv(local_file)
+    df.columns = (
+        df.columns
+        .str.strip()
+        .str.replace(r"\s+", "_", regex=True)
+    )
     print(f"✓ Loaded {len(df)} rows")
     return df
 
@@ -92,10 +109,6 @@ def transform_data(df_input):
         "Unsuppressed_ROC": "fovdRRTrZpI",
     }
 
-    month_map = {'Jan': '01', 'Feb': '02', 'Mar': '03', 'Apr': '04',
-                 'May': '05', 'Jun': '06', 'Jul': '07', 'Aug': '08',
-                 'Sep': '09', 'Oct': '10', 'Nov': '11', 'Dec': '12'}
-
     # Derived fields
     df_input['CD4 >= 200'] = df_input['CD4_tests'] - df_input['CD4<200']
     df_input['CrAg Neg'] = df_input['CrAg_tests'] - df_input['CrAg+']
@@ -112,12 +125,24 @@ def transform_data(df_input):
     for idx, row in df_input.iterrows():
         if pd.isna(row['Reporting_month']):
             continue
-        month = row['Reporting_month'].strip()
-        if pd.notna(row['Reporting_year']):
-            year = int(row['Reporting_year'])
-        else:
-            year = None
-        period = f"{year}{month_map.get(month, '00')}"
+        month_str = row['Reporting_month'].strip()
+        year = int(row['Reporting_year']) if pd.notna(row['Reporting_year']) else None
+        try:
+            month_num = datetime.strptime(month_str, '%b').month
+        except ValueError:
+            try:
+                month_num = datetime.strptime(month_str, '%B').month
+            except ValueError:
+                month_num = None
+        
+        period = f"{year}{month_num:02d}" if year and month_num else None
+
+        # if pd.notna(row['Reporting_year']):
+        #     year = int(row['Reporting_year'])
+        # else:
+        #     year = None
+        # period = f"{year}{month_map.get(month, '00')}"
+        print(f"Month {month_str}, Year={year}, Period={period}")
 
         for de in data_elements:
             if de not in row or pd.isna(row[de]):
@@ -161,7 +186,7 @@ def is_positive_integer_value(v):
 
 if __name__ == "__main__":
     print("→ Loading data into Dataframe from Excel...")
-    df = load_excel_file()
+    df = load_csv_file()
 
     print("→ Transforming data...")
     dhis2_data = transform_data(df)
