@@ -137,13 +137,6 @@ def transform_data(df_input):
         
         period = f"{year}{month_num:02d}" if year and month_num else None
 
-        # if pd.notna(row['Reporting_year']):
-        #     year = int(row['Reporting_year'])
-        # else:
-        #     year = None
-        # period = f"{year}{month_map.get(month, '00')}"
-        print(f"Month {month_str}, Year={year}, Period={period}")
-
         for de in data_elements:
             if de not in row or pd.isna(row[de]):
                 continue
