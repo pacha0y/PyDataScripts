@@ -1,0 +1,5 @@
+pandas
+openpyxl
+requests
+Office365-REST-Python-Client
+python-dotenv
